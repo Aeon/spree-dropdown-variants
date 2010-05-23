@@ -16,7 +16,7 @@
       <ul>
         <%  @product.option_types.each do |option_type| %>
             <li>
-              <%= option_type.presentation %><br/>
+              <%= label_tag "option_types_#{option_type.id}", option_type.presentation %>
               <%= select_tag "option_types[#{option_type.id}]", options_from_collection_for_select(instock_option_values(@product, option_type), :id, :presentation) %>
             </li>
         <% end%>
