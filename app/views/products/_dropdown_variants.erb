@@ -1,10 +1,10 @@
-
+<div id="dropdown-variants">
   <% if product_price(@product) %>
     <% hook :product_price do %>
       <p class="prices">
         <%= t("price") %>
         <br />
-        <span class="price selling"><%= product_price(@product) %></span>
+        <span class="price selling"><%= product_price(@selected_variant) %></span>
       </p>
     <% end %>
   <% end %>
@@ -13,11 +13,13 @@
     <div id="product-variants">
       <h2><%= t('variants') %></h2>
       <%= hidden_field_tag 'product', @product.id %>
+      <%= hidden_field_tag 'variant', @selected_variant.id %>
       <ul>
-        <%  @product.option_types.each do |option_type| %>
+        <% @product.option_types.each do |option_type| %>
             <li>
-              <%= option_type.presentation %><br/>
-              <%= select_tag "option_types[#{option_type.id}]", options_from_collection_for_select(instock_option_values(@product, option_type), :id, :presentation) %>
+              <b><%= option_type.presentation %></b><br/>
+              <% selected = @selected_variant.option_values.detect { |ov| ov.option_type_id == option_type.id }.id %>
+              <%= select_tag "option_types[#{option_type.id}]", options_from_collection_for_select(instock_option_values(@product, option_type).reverse, :id, :presentation, selected) %>
             </li>
         <% end%>
       </ul>
@@ -33,3 +35,4 @@
   <% else %>
     <%= content_tag('strong', t('out_of_stock')) %>
   <% end %>
+</div>

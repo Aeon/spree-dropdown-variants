@@ -61,6 +61,27 @@ class DropdownVariantsExtension < Spree::Extension
         end
       end
     end
+    
+    ProductsController.class_eval do
+      append_before_filter :override_selected, :only => :show
+      
+      def selected_variant
+        @product = Product.available.find(params[:id])
+        @selected_variant = Variant.find_by_option_types_and_product(params[:option_types], params[:product])
+      end
+      
+      private
+      
+      def override_selected
+        @selected_variant = @product.default_variant
+      end
+    end
+    
+    Product.class_eval do
+      def default_variant
+        self.variants.find_by_sku(self.master.sku) || self.master
+      end
+    end
   end
   
 end
