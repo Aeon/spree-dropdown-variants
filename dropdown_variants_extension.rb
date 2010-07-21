@@ -67,7 +67,10 @@ class DropdownVariantsExtension < Spree::Extension
       
       def selected_variant
         @product = Product.available.find(params[:id])
-        @selected_variant = Variant.find_by_option_types_and_product(params[:option_types], params[:product])
+        unless @selected_variant = Variant.find_by_option_types_and_product(params[:option_types], params[:product])
+          @error_message = I18n.t('variant_does_not_exist')
+          @selected_variant = Variant.find(params[:variant])
+        end
       end
       
       private

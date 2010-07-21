@@ -1,3 +1,4 @@
 ---
 en-US:
   variant_out_of_stock: The selection you made is not in stock.
+  variant_does_not_exist: Sorry. No product was found with those options.

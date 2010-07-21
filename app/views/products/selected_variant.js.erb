@@ -1,3 +1,6 @@
 $('#dropdown-variants').replaceWith("<%= escape_javascript(
   render(:partial => 'products/dropdown_variants')) %>"
 );
+<% if @error_message %>
+  alert("<%= @error_message %>");
+<% end %>
