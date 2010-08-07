@@ -18,7 +18,10 @@
         <% @product.option_types.each do |option_type| %>
             <li>
               <b><%= option_type.presentation %></b><br/>
-              <% selected = @selected_variant.option_values.detect { |ov| ov.option_type_id == option_type.id }.id %>
+              <%
+                selected = @selected_variant.option_values.detect { |ov| ov.option_type_id == option_type.id }
+                selected = selected.id if selected
+              %>
               <%= select_tag "option_types[#{option_type.id}]", options_from_collection_for_select(instock_option_values(@product, option_type).reverse, :id, :presentation, selected) %>
             </li>
         <% end%>
