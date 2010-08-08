@@ -1,6 +1,13 @@
 $('#dropdown-variants').replaceWith("<%= escape_javascript(
   render(:partial => 'products/dropdown_variants')) %>"
 );
+$('#main-image').html("<%= escape_javascript(
+  render(:partial => 'products/image')) %>"
+);
+$('#thumbnails').html("<%= escape_javascript(
+  render(:partial => 'products/thumbnails', :locals => {:product => @product, :ajax => true})) %>"
+);
+
 <% if @error_message %>
   alert("<%= @error_message %>");
 <% end %>

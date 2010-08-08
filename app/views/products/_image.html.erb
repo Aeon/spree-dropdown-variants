@@ -1,0 +1,9 @@
+<% if image %>
+  <%= image_tag image.attachment.url(:product) %>
+<% else %>
+  <% if show_variant_images? %>
+    <%= product_image(@selected_variant) %>
+  <% else %>
+    <%= product_image(@product) %>
+  <% end %>
+<% end %>

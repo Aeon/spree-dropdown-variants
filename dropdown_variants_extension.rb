@@ -14,6 +14,10 @@ class DropdownVariantsExtension < Spree::Extension
         uniq_option_values = instock.collect(&:option_values).flatten.uniq
         uniq_option_values.find_all{|ov| ov.option_type == option_type}
       end
+      
+      def show_variant_images?
+        @product.has_variants? && @selected_variant && !@selected_variant.images.empty?
+      end
     end
 
     Variant.class_eval do
@@ -66,7 +70,8 @@ class DropdownVariantsExtension < Spree::Extension
       append_before_filter :override_selected, :only => :show
       
       def selected_variant
-        @product = Product.available.find(params[:id])
+        @product ||= Product.available.find(params[:id])
+        @variants = @product.variants
         unless @selected_variant = Variant.find_by_option_types_and_product(params[:option_types], params[:product])
           @error_message = I18n.t('variant_does_not_exist')
           @selected_variant = Variant.find(params[:variant])
