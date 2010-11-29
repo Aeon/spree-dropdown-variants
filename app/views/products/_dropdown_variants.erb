@@ -15,9 +15,9 @@
       <%= hidden_field_tag 'product', @product.id %>
       <%= hidden_field_tag 'variant', @selected_variant.id %>
       <ul>
-        <% @product.option_types.each do |option_type| %>
+        <%  @product.option_types.each do |option_type| %>
             <li>
-              <b><%= option_type.presentation %></b><br/>
+              <%= label_tag "option_types_#{option_type.id}", option_type.presentation %><br/>
               <%
                 selected = @selected_variant.option_values.detect { |ov| ov.option_type_id == option_type.id }
                 selected = selected.id if selected
