@@ -1,6 +1,6 @@
 
   <% if product_price(@product) %>
-    <% hook :product_price do %>
+    <%= hook :product_price do %>
       <p class="prices">
         <%= t("price") %>
         <br />
