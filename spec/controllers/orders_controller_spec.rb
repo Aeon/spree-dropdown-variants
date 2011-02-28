@@ -43,4 +43,10 @@ describe OrdersController do
      response.should be_redirect
      assigns[:current_order].line_items.size.should == 1
   end
+  
+  it "should redirect back to the products page if variant options are blank" do
+    post :populate, {"quantity" => "1", "product" => @product.id, "option_types" => {@size_option_type.id=>"", @color_option_type.id=>""}}
+    response.should redirect_to(product_path(@product))
+    flash[:error].should be_present
+  end
 end
