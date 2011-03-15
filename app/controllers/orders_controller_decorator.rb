@@ -7,7 +7,7 @@ protected
   def disregard_if_blank_option_types
     if params[:option_types] and params[:product]
       if params[:option_types].any?{|key, value| value.blank?}
-        flash[:error] = 'Please choose a Ring Size and Ring Material before adding to the cart.'
+        flash[:error] = 'Please choose product options before continuing to the cart.'
         redirect_to product_path(Product.find params[:product])
       end
     end
