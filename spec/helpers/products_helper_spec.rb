@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe ProductsHelper do
   include ProductsHelper
   before(:each) do
+      Spree::Config.set(:track_inventory_levels => true)
       Spree::Config.set(:show_zero_stock_products => false) 
       @product = Factory(:product) 
       @size_option_type = Factory(:option_type)

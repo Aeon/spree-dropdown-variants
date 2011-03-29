@@ -1,8 +1,13 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe OrdersController do
+  include Devise::TestHelpers
   
   before(:each) do
+    @user = User.anonymous!
+    sign_in @user
+    
+    Spree::Config.set(:track_inventory_levels => true)
     Spree::Config.set(:allow_backorders => false)
     @product = Factory(:product)
     create_in_stock_variant
@@ -27,30 +32,21 @@ describe OrdersController do
     @variant.option_values << @size_option_value
   end
   
-  def do_create
-    post :create, :quantity => 1, :product => @product.id, 
+  def do_populate
+    post :populate, :quantity => 1, :product => @product.id, 
          :option_types => {@size_option_type.id => @size_option_value.id, 
                            @color_option_type.id => @red_option_value.id}
   end
   
   it 'should redirect on success' do
-     do_create
+     do_populate
      response.should be_redirect
+     assigns[:current_order].line_items.size.should == 1
   end
   
-  it 'should return success when variant is invalid' do
-    create_out_of_stock_variant
-    do_create
-    response.should be_success
+  it "should redirect back to the products page if variant options are blank" do
+    post :populate, {"quantity" => "1", "product" => @product.id, "option_types" => {@size_option_type.id=>"", @color_option_type.id=>""}}
+    response.should redirect_to(product_path(@product))
+    flash[:error].should be_present
   end
-  
-  it 'should render the products show template' do
-    create_out_of_stock_variant
-    do_create
-    response.should render_template('orders/edit')
-  end
-
 end
-
-
-
