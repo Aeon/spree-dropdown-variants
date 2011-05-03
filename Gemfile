@@ -15,4 +15,4 @@ group :test do
   end
 end
 
-gem 'spree', '0.40.3'
+gem 'spree', '0.50.0'
