@@ -4,7 +4,7 @@
       <p class="prices">
         <%= t("price") %>
         <br />
-        <span class="price selling"><%= product_price(@selected_variant) %></span>
+        <span class="price selling"><%= product_price(@product) %></span>
       </p>
     <% end %>
   <% end %>
@@ -21,11 +21,33 @@
               <%
                 selected = @selected_variant.option_values.detect { |ov| ov.option_type_id == option_type.id }
                 selected = selected.id if selected
+              # TODO: show variant_price_diff in select.
               %>
               <%= select_tag "option_types[#{option_type.id}]", options_from_collection_for_select(instock_option_values(@product, option_type).reverse, :id, :presentation, selected) %>
             </li>
         <% end%>
       </ul>
+<!--
+      <ul>
+        <%  has_checked = false
+        @product.variants.active.each_with_index do |v,index|
+          next if v.option_values.empty? || (!v.in_stock && !Spree::Config[:show_zero_stock_products])
+          checked = !has_checked && (v.in_stock || Spree::Config[:allow_backorders])
+          has_checked = true if checked %>
+          <li>
+            <label>
+              <%= radio_button_tag "products[#{@product.id}]", v.id, checked, :disabled => !v.in_stock && !Spree::Config[:allow_backorders] %>
+              <span class="variant-description">
+                <%= variant_options v %>
+              </span>
+              <% if variant_price_diff v %>
+                <span class="price diff"><%= variant_price_diff v %></span>
+              <% end %>
+            </label>
+          </li>
+        <% end%>
+      </ul>
+-->
     </div>
   <% end%>
   <% if @product.has_stock? || Spree::Config[:allow_backorders] %>
@@ -39,3 +61,7 @@
     <%= content_tag('strong', t('out_of_stock')) %>
   <% end %>
 </div>
+
+<% content_for :head do %>
+  <%= javascript_include_tag 'dropdown_variants' %>
+<% end %>
